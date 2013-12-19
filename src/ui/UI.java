@@ -107,8 +107,13 @@ public class UI extends JFrame implements Observer {
 		pnlTab = new JTabbedPane();
 		pnlTab.addTab("Simulation Settings", setupSettings());
 		pnlMain.add(pnlTab, BorderLayout.CENTER);
-		add(setupMessageWindow(), BorderLayout.SOUTH);
-		add(pnlMain, BorderLayout.CENTER);
+		pnlMain.add(setupMessageWindow(), BorderLayout.SOUTH);
+		
+		JScrollPane scroll = new JScrollPane(pnlMain);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		add(scroll);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		updateParamValues();
 		setSize(1500, 1000);
