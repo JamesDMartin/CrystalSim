@@ -9,10 +9,9 @@
  *     Eric Dill -- eddill@ncsu.edu - initial API and implementation
  * 	James D. Martin -- jdmartin@ncsu.edu - Principal Investigator
  ******************************************************************************/
-package ui;
+package archivedUI;
 
 import geometry.JVector;
-import indexing.AlphabeticIndexingSystem;
 import io.StringConverter;
 
 import java.io.File;
@@ -34,36 +33,28 @@ import simulation.NucleationOrientation;
 import simulation.SimulSetupParams;
 import simulation.Simulation;
 
-public class SimulationController_UserFriendly {
+public class SimulationController_CommandLine {
 
 	public SimulSetupParams sp;
 	private File fName;
 	private int sampleGeometry, runDuration, analysisMethod, desiredIterations, whichAspectRatio, volume, whichFitting;
 	private double[] alphaBounds;
-	private Scanner scanner;
-	private boolean nAsFnOfAspectRatio = true;
-	private volatile static String NOTEBOOK_NAME = "EDD";
-	private volatile static String NOTEBOOK_NUMBER = "10";
-	private volatile static String PAGE_NUMBER = "186";
-	private volatile static AlphabeticIndexingSystem pageIdx = new AlphabeticIndexingSystem('j');
-	private File outputFolder = new File(NOTEBOOK_NAME + "_" + NOTEBOOK_NUMBER + "-" + PAGE_NUMBER + pageIdx.getName());
-	public SimulationController_UserFriendly() {
+	public SimulationController_CommandLine() {
 		sp = new SimulSetupParams();
-		scanner = new Scanner(System.in);
 		try {
 			initialize();	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		scanner.close();
 	}
 	private int whichFitting() {
 		System.out.println("Which fitting type?");
-		System.out.println("(0) JMAK. (1) Sharp-Hancock.");
-		int intVal = scanner.nextInt();
+		System.out.println("(1) JMAK. (2) Sharp-Hancock.");
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
-		case 0:
 		case 1:
+		case 2:
 			return intVal;
 		default:
 			System.out.println("Selection: " + intVal + " is not valid.  Please try again.");
@@ -73,7 +64,8 @@ public class SimulationController_UserFriendly {
 	private int whichMethod() {
 		System.out.println("Which type of simulation geometries would you like?");
 		System.out.println("(1) All Experimental Geometries?\n(2) Select Experimental Geometries?\n(3) Aspect Ratio Variation?");
-		int intVal = scanner.nextInt();
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
 		case 1:
 		case 2: 
@@ -95,7 +87,8 @@ public class SimulationController_UserFriendly {
 					"\n(5) Single crystallites randomly aligned and randomly nucleated?" +
 					"\n(6) Multiple crystallites randomly aligned and randomly nucleated?" +
 					"\n(7) Alpha Range Test (basically (1), but the bounds of alpha are modified based on the user input)?");
-		int intVal = scanner.nextInt();
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
 		case 1:
 		case 2: 
@@ -114,7 +107,8 @@ public class SimulationController_UserFriendly {
 	}
 	private boolean runAlphaRangeTest() {
 		System.out.println("Perform the alpha range test? (1) Yes\n(2) No.");
-		switch(scanner.nextInt()) {
+		Scanner s = new Scanner(System.in);
+		switch(s.nextInt()) {
 		case 1:
 			return true;
 		case 2:
@@ -142,16 +136,17 @@ public class SimulationController_UserFriendly {
 	private int whichDuration() {
 		desiredIterations = 100;
 		System.out.println("(1) set number of iterations?\n(2) set length?\n(3)Just run once.");
-		int intVal = scanner.nextInt();
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
 		case 1:
 			System.out.println("How many iterations?");
-			desiredIterations = scanner.nextInt();
+			desiredIterations = s.nextInt();
 			System.out.println(desiredIterations + " iterations");
 			return 1;
 		case 2: 
 			System.out.println("How long do you want this to run for? (in hours)");
-			desiredIterations = scanner.nextInt();
+			desiredIterations = s.nextInt();
 			System.out.println(desiredIterations + " hours");
 			return 2;
 		case 3:
@@ -164,14 +159,13 @@ public class SimulationController_UserFriendly {
 	}
 	private int whichAnalysis() {
 		System.out.println("Which type of simulation geometries would you like?");
-		System.out.println("(1) Fit kA & t0?\n(2) Fit kA & n?\n(3) First fit kA & t0, then fit kA & n?\n(4) Fit none?\n(5) Fit all?");
-		int intVal = scanner.nextInt();
+		System.out.println("(1) Fit kA & t0?\n(2) Fit kA & n?\n(3) First fit kA & t0, then fit kA & n?");
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
 		case 1:
 		case 2: 
 		case 3:
-		case 4:
-		case 5:
 			return intVal;
 		default:
 			System.out.println("Selection: " + intVal + " is not valid.  Please try again.");
@@ -181,7 +175,8 @@ public class SimulationController_UserFriendly {
 	private boolean test() {
 		System.out.println("Do you want to test one iteration of your simulation to estimate the time to completion?");
 		System.out.println("(1) Yes.\n(2) No.\n");
-		int intVal = scanner.nextInt();
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
 		case 1:
 			return true;
@@ -194,7 +189,8 @@ public class SimulationController_UserFriendly {
 	}
 	private boolean keepRunning() {
 		System.out.println("Continue?\n(1) Yes.\n(2) No.\n");
-		int intVal = scanner.nextInt();
+		Scanner s = new Scanner(System.in);
+		int intVal = s.nextInt();
 		switch(intVal) {
 		case 1:
 			return true;
@@ -252,8 +248,8 @@ public class SimulationController_UserFriendly {
 	}
 	private int howBig() {
 		System.out.println("How large do you want the sample volume to be? (Integers only, please!)");
-		int val = scanner.nextInt();
-		return val;
+		Scanner s = new Scanner(System.in);
+		return s.nextInt();
 	}
 	public void initialize() throws IOException, ClassNotFoundException {
 		String time;
@@ -278,7 +274,6 @@ public class SimulationController_UserFriendly {
 				System.exit(1);
 			}
 		}
-		run();
 
 	}
 	public int getTotalVolume() { return 1000; }
@@ -337,15 +332,13 @@ public class SimulationController_UserFriendly {
 	}
 	private void simulateAspectRatioVariation(int iterations) throws IOException {
 		Simulation s;
-		String excel = "";
-		if(!outputFolder.exists()) { outputFolder.mkdir(); }
-		fName = new File(outputFolder + File.separator + "analysis.out");
+		String excel = "";		
+		fName = new File("Compiled Excel Automated Analysis.auto1");
 		FileOutputStream fos = new FileOutputStream(fName);
 		FileOutputStream fosObj;
 		ObjectOutputStream objOut;
 		PrintStream ps = new PrintStream(fos);
 		SimulSetupParams ssp = new SimulSetupParams();
-		ssp.setNucContVal(-1);
 		
 		int numXYZOutput = 0;
 		int volumeIncrement = 1;//(int) Math.pow(10, 3);
@@ -388,7 +381,7 @@ public class SimulationController_UserFriendly {
 			for(int max = 0; max < alphaMax.length; max++) {
 				if(alphaMin[min] >= alphaMax[max]) { continue; }
 				for(int e = 0; e < sampleAxes.length; e++) {
-					fosObj = new FileOutputStream(outputFolder + File.separator + expType[e].toString() + "_" + 
+					fosObj = new FileOutputStream(expType[e].toString() + "_" + 
 							sampleAxes[e][0] + "_" + sampleAxes[e][1] + "_" + sampleAxes[e][2] + ".obj");
 					objOut = new ObjectOutputStream(fosObj);
 					ssp.setSampleUnitsPerAxis(sampleAxes[e]);
@@ -425,9 +418,7 @@ public class SimulationController_UserFriendly {
 		
 					// multiple crystals aligned and not in center
 					case 3:
-						if(ssp.getNucContVal() < 0 || ssp.getNucContVal() > 1) { 
-							ssp.setNucContVal(getNucleationRate());
-						}
+						ssp.setNucContVal(0.025);
 						ssp.setNucOrient(NucleationOrientation.SetOfOrientations);
 						ssp.setNucOrientVal(JVector.axes100U);
 						ssp.setNucLoc(NucleationLocation.Random);
@@ -449,9 +440,7 @@ public class SimulationController_UserFriendly {
 						break;
 					// multiple crystals not aligned and not in center
 					case 6:
-						if(ssp.getNucContVal() < 0 || ssp.getNucContVal() > 1) { 
-							ssp.setNucContVal(getNucleationRate());
-						}
+						ssp.setNucContVal(0.025);
 						ssp.setNucOrient(NucleationOrientation.Random);
 						ssp.setNucLoc(NucleationLocation.Random);
 						break;
@@ -466,6 +455,7 @@ public class SimulationController_UserFriendly {
 						ssp.setNucLocOptions(new JVector[] {nucLoc});
 						ssp.setAlphaMin(alphaMin[min]);
 						ssp.setAlphaMax(alphaMax[max]);
+						analysisMethod = 4;
 						break;
 					}
 					for(int i = 0; i < iterations ; i++) {
@@ -475,34 +465,28 @@ public class SimulationController_UserFriendly {
 							ssp.setXyz(false);
 						}
 						ssp.newFileNames();
-						s = new Simulation(ssp, e, i, sampleAxes.length);
+						s = new Simulation(ssp);
 						s.run();
-						Analysis a = new Analysis(whichFitting);
-						a.zipPrinter = ssp.getZipPrinter_Fits();
 						switch(analysisMethod) {
 						case 1:
-							excel = a.analyzeWithOneFixed(s, 2, nAsFnOfAspectRatio);
+							excel = (new Analysis(whichFitting)).analyzeFixedN(s);
 							break;
 						case 2:
-							excel = a.analyzeWithOneFixed(s, 1, nAsFnOfAspectRatio);
+							excel = (new Analysis(whichFitting)).analyzeFixedt0(s);
 							break;
 						case 3:
-							excel = a.analyzeWithOneFixed(s, 1, nAsFnOfAspectRatio);
-							excel += a.analyzeWithOneFixed(s, 2, nAsFnOfAspectRatio);
+							excel = (new Analysis(whichFitting)).analyzeFixedN(s);
+							excel += (new Analysis(whichFitting)).analyzeFixedt0(s);
 							break;
 						case 4:
-							excel = a.analyzeFixedAll(s);
-							break;
-						case 5: 
-							excel = a.analyzeWithOneFixed(s, 3, nAsFnOfAspectRatio);
-							break;
+							excel = (new Analysis(whichFitting)).analyzeFixedAll(s);
 						}
 						if(excel.compareTo("bad") != 0) {
 							ps.print(excel);
 						} else {
 							ps.println(excel);
 						}
-						ssp.nullify();
+						
 						ps.flush();
 						fos.flush();
 						s.getSample().setLatticeToNull();
@@ -512,16 +496,6 @@ public class SimulationController_UserFriendly {
 				}
 			}
 		}
-		ps.close();
-	}
-	private double getNucleationRate() {
-		System.out.println("What nucleation rate do you want? (0 <= knuc <= 1");
-		double rate = scanner.nextDouble();
-		if(rate < 0 || rate > 1) {
-			System.out.println("Selection: " + rate + " is not between and 1.");
-			return getNucleationRate();
-		}
-		return rate;
 	}
 	private void simulate(int iterations) throws IOException {
 		Simulation s;
@@ -563,7 +537,7 @@ public class SimulationController_UserFriendly {
 		String dscVal = "";
 		ssp.setTransformed(false);
 		ssp.setXyz(false);
-		ssp.setFit(true);
+		ssp.setFit(false);
 		ssp.setMovie(false);
 		ssp.setAxialGrowthRates(new double[] {1., 1., 1.});
 		for(int e = 0; e < expType.length; e++) {
@@ -592,9 +566,9 @@ public class SimulationController_UserFriendly {
 					ssp.setXyz(false);
 				}
 				ssp.newFileNames();
-				s = new Simulation(ssp, i, 1, iterations);
+				s = new Simulation(ssp);
 				s.run();
-				excel = (new Analysis(whichFitting)).analyzeWithOneFixed(s, 2, nAsFnOfAspectRatio);
+				excel = (new Analysis(whichFitting)).analyzeFixedN(s);
 				if(excel.compareTo("bad") != 0) {
 					ps.print(excel);
 				} else {
@@ -608,7 +582,6 @@ public class SimulationController_UserFriendly {
 				System.out.print("Set: " + (e+1) + "/" + expType.length + " with: " + iterations + " iterations ");
 			}
 		}
-		ps.close();
 	}
 	
 	/**
@@ -656,11 +629,11 @@ public class SimulationController_UserFriendly {
 			return new int[] {radius, radius, (int) h};
 		case CUSTOM_R:
 			radius = (int) DSCMass;
-			height = (int) Math.round(desiredVolume / (DSCMass * DSCMass) / Math.PI); 
+			height = (int) Math.round(desiredVolume / (radius * radius) / Math.PI); 
 			return new int[] {radius, radius, height};
 		case CUSTOM_H:
 			height = (int) DSCMass;
-			radius = (int) Math.round(Math.sqrt(desiredVolume / DSCMass / Math.PI)); 
+			radius = (int) Math.round(Math.sqrt(desiredVolume / height / Math.PI)); 
 			return new int[] {radius, radius, height};
 		}
 		
@@ -674,6 +647,6 @@ public class SimulationController_UserFriendly {
 	}
 	public static void main(String[] args) {
         
-		new SimulationController_UserFriendly();
+		new SimulationController_CommandLine();
 	}
 }

@@ -9,7 +9,7 @@
  *     Eric Dill -- eddill@ncsu.edu - initial API and implementation
  * 	James D. Martin -- jdmartin@ncsu.edu - Principal Investigator
  ******************************************************************************/
-package ui;
+package archivedUI;
 
 import geometry.JVector;
 import indexing.AlphabeticIndexingSystem;
