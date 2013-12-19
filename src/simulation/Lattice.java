@@ -18,12 +18,14 @@ public class Lattice implements Serializable {
 
 	private static final long serialVersionUID = -6957910015701592596L;
 	private int a, b, c;
-	private char[][][] subSystem;
+	private short[][][] subSystem;
+	public static final short UNOCCUPIED_LATTICE_POINT = 0;
+	public static final short LATTICE_POINT_OUTSIDE_SHAPE = Short.MIN_VALUE;
 	public Lattice(int numA, int numB, int numC) {
 		a = numA;
 		b = numB;
 		c = numC;
-		subSystem = new char[a][b][c];
+		subSystem = new short[a][b][c];
 	}
 	public Lattice(int[] units) {
 		this(units[0], units[1], units[2]);
@@ -37,10 +39,41 @@ public class Lattice implements Serializable {
 	 * @param j y coordinate
 	 * @param k z coordinate
 	 * @return true: coordinates are inside the sample bounding shape and are not occupied. false: coordinate
-	 * are either outside the sample bounding shape or are occupied by another crystal
+	 * is occupied by another crystal or outside the shape
+	 */
+	public boolean isFree(int i, int j, int k) {
+		int idx = subSystem[i][j][k];
+		if(idx == UNOCCUPIED_LATTICE_POINT) {
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 
+	 * @param i x coordinate
+	 * @param j y coordinate
+	 * @param k z coordinate
+	 * @return true: coordinates are inside the sample bounding shape and are not occupied. false: coordinate
+	 * is occupied by another crystal
 	 */
 	public boolean isOccupied(int i, int j, int k) {
-		if(subSystem[i][j][k] == 0) {
+		int idx = subSystem[i][j][k];
+		if(idx == UNOCCUPIED_LATTICE_POINT) {
+			return false;
+		}
+		return true;
+	}
+	/**
+	 * 
+	 * @param i x coordinate
+	 * @param j y coordinate
+	 * @param k z coordinate
+	 * @return true: coordinates are inside the sample bounding shape and are not occupied. false: coordinate
+	 * are either outside the sample bounding shape or are occupied by another crystal
+	 */
+	public boolean isOutsideShape(int i, int j, int k) {
+		int idx = subSystem[i][j][k];
+		if(idx == LATTICE_POINT_OUTSIDE_SHAPE) {
 			return false;
 		}
 		return true;
@@ -57,8 +90,8 @@ public class Lattice implements Serializable {
 	 * @return false: lattice is already occupied or location is outside the bounds of the sample<br>
 	 * true: lattice point successfully occupied
 	 */
-	public boolean occupy(int i, int j, int k, char xtalIdx, int totalXtalSize) {
-		if(isOccupied(i, j, k)) { return false; }
+	public boolean occupy(int i, int j, int k, short xtalIdx, int totalXtalSize) {
+		if(!isFree(i, j, k)) { return false; }
 
 		if(totalXtalSize == 0) {
 			subSystem[i][j][k] = xtalIdx;
@@ -99,10 +132,10 @@ public class Lattice implements Serializable {
 		
 		return false;
 	}
-	public void initOccupy(int i, int j, int k, char val) {
+	public void initOccupy(int i, int j, int k, short val) {
 		subSystem[i][j][k] = val;
 	}
-	public char getVal(int i, int j, int k) { return subSystem[i][j][k]; }
+	public short getVal(int i, int j, int k) { return subSystem[i][j][k]; }
 	public int getX() { return a; }
 	public int getY() { return b; }
 	public int getZ() { return c; }

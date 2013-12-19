@@ -31,13 +31,13 @@ public class Crystal extends Observable implements Serializable {
 	 */
 	private double[] curAxes;
 	private double[] initDims;
-	private char idx;
+	private short idx;
 	private int size;
 	public final static int BAD_NUCLEATION_LOCATION = 0;
 	private Vector<Integer> numTransformed;
 	private Vector<JVector> latticePoints;
 	
-	public Crystal(Shape shape, NucleationEvent ne, double[] axialGrowthRates, char idx, Observer o) {
+	public Crystal(Shape shape, NucleationEvent ne, double[] axialGrowthRates, short idx, Observer o) {
 		addObserver(o);
 		this.shape = shape;
 		this.ne = ne;
@@ -81,7 +81,7 @@ public class Crystal extends Observable implements Serializable {
 	 */
 	public void addVolume(int additionalVolume) { size += additionalVolume; }
 	
-	public char getCrystalIdx() { return idx; }
+	public short getCrystalIdx() { return idx; }
 	
 	public void setInitDim(double[] dims) {
 		initDims = new double[dims.length];

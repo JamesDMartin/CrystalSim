@@ -39,7 +39,7 @@ public class SimulationController_UI extends Observable implements Observer {
 	public SimulSetupParams sp;
 	private File fName;
 	private int desiredIterations,  whichFitting;
-	private int totalVolume, currentVolume;
+	private long totalVolume, currentVolume;
 	private Vector<Simulation> simulations;
 	private int simulReturnIndex = 0;
 	private Executor e;
@@ -60,13 +60,13 @@ public class SimulationController_UI extends Observable implements Observer {
 		initializeStreams();
 		simulations = new Stack<Simulation>();
 	}
-	public int getTotalVolume() {
+	public long getTotalVolume() {
 		if(totalVolume == 0) {
 			return sp.getApproxVolume();
 		}
 		return totalVolume; 
 	}
-	public int getCurrentVolume() { return currentVolume; }
+	public long getCurrentVolume() { return currentVolume; }
 	
 	public boolean isRunning() {
 		return isRunning;

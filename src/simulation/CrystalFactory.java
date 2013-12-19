@@ -31,16 +31,16 @@ public class CrystalFactory implements Observer, Serializable {
 	private int numCrystals;
 	private SimulSetupParams sp;
 	private Random r;
-	private Stack<Character> indices;
+	private Stack<Short> indices;
 	
 	public CrystalFactory(Sample sample, SimulSetupParams sp) {
 		this.sample = sample;
 		r = new Random();
 		this.sp = sp;
 		numCrystals = 0;
-		indices = new Stack<Character>();
+		indices = new Stack<Short>();
 		for(int i = (sp.getMaxNumCrystals()); i > 0; i--) {
-			indices.push((char) i);
+			indices.push((short) i);
 		}
 //		System.out.println("First xtal idx: " + (int) indices.peek());
 	}
@@ -55,7 +55,7 @@ public class CrystalFactory implements Observer, Serializable {
 		ShapeTypes type = getShapeType();
 		Shape shape = ShapeFactory.newShape(type, ne.getLocation(), getShapeOrientation(type));
 		numCrystals++;
-		char idx = 0;
+		short idx = 0;
 		try  {
 			idx = indices.pop();
 			//System.out.println("Popped " + idx);
@@ -69,7 +69,7 @@ public class CrystalFactory implements Observer, Serializable {
 		ShapeTypes type = getShapeType();
 		Shape shape = ShapeFactory.newShape(type, ne.getLocation(), getShapeOrientation(type));
 		numCrystals++;
-		char idx = 0;
+		short idx = 0;
 		try  {
 			idx = indices.pop();
 			//System.out.println("Popped " + idx);
@@ -83,7 +83,7 @@ public class CrystalFactory implements Observer, Serializable {
 		ShapeTypes type = getShapeType();
 		Shape shape = ShapeFactory.newShape(type, ne.getLocation(), nucOrient);
 		numCrystals++;
-		char idx = 0;
+		short idx = 0;
 		try  {
 			idx = indices.pop();
 			//System.out.println("Popped " + idx);

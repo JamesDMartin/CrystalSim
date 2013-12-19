@@ -31,8 +31,9 @@ public class Sample implements Serializable {
 	private int[] unitsPerAxis_i;
 	private double[] unitsPerAxis_d;
 	private Vector<Crystal> crystals;
-	private int totalVolume;
+	private long totalVolume;
 	private Lattice l;
+	private long occupiedVolume;
 	
 	public Sample(ShapeTypes type, JVector[] unitAxes, int[] unitsPerAxis) {
 		shape = createSampleShape(type, unitAxes, unitsPerAxis);
@@ -57,26 +58,6 @@ public class Sample implements Serializable {
 			break;
 		}
 		totalVolume = calculateTotalVolume();
-	}
-	private int initLattice() {
-		JVector pos = new JVector(); 
-		int latticePoints = 0;
-		for(int i = 0; i < l.getX(); i++) {
-			pos.i = i;
-			for(int j = 0; j < l.getY(); j++) {
-				pos.j = j;
-				for(int k = 0; k < l.getZ(); k++) {
-					pos.k = k;
-					if(shape.isInside(unitsPerAxis_d, pos)) {
-						latticePoints++;
-						l.initOccupy(i, j, k, (char) 0);
-					} else {
-						l.initOccupy(i, j, k, Character.MAX_VALUE);
-					}
-				}
-			}
-		}
-		return latticePoints;
 	}
 	
 	public void grow(double curTime) {
@@ -260,7 +241,7 @@ public class Sample implements Serializable {
 				pos.j = j;
 				for(int k = 0; k < l.getZ(); k++) {
 					pos.k = k;
-					char curVal = l.getVal(i, j, k);
+					short curVal = l.getVal(i, j, k);
 					if(curVal != Character.MAX_VALUE) {
 						totalNewGrowth[0]++; //total lattice points inside bounding shape
 						if(curVal == 0) {
@@ -349,7 +330,7 @@ public class Sample implements Serializable {
 	public boolean isInside(JVector loc) {
 		return shape.isInside(unitsPerAxis_d, loc);
 	}
-	private int calculateTotalVolume() {
+	private long calculateTotalVolume() {
 		JVector pos = new JVector();
 		int totalV = 0;
 		for(int i = 0; i < l.getX(); i++) {
@@ -388,7 +369,7 @@ public class Sample implements Serializable {
 	public Shape getShape() { return shape; }
 	public int[] getUnitsPerAxis() { return unitsPerAxis_i; }
 	
-	public int getTotalVolume() {
+	public long getTotalVolume() {
 		if(totalVolume == 0) {
 			calculateTotalVolume();
 		}
@@ -573,20 +554,25 @@ public class Sample implements Serializable {
 		Vector<JVector> locations = new Vector<JVector>();
 		JVector pos = new JVector();
 		for(int i = 0; i < l.getX(); i++) {
-			pos.i = i;
 			for(int j = 0; j < l.getY(); j++) {
-				pos.j = j;
 				for(int k = 0; k < l.getZ(); k++) {
-					pos.k = k;
-					if(shape.isInside(unitsPerAxis_d, pos) && !l.isOccupied(i, j, k)) {
+					if(l.isFree(i, j, k)) {
 						locations.add((JVector) pos.clone());
 					}
 				}
 			}
 		}
+		int size = locations.size();
+		if(size == 0)
+			return null;
 		
 		Random r = new Random();
-		int idx = r.nextInt(locations.size());
+		int idx = 0;
+		try {
+			idx = r.nextInt(size);
+		} catch(IllegalArgumentException iae) {
+			iae.printStackTrace();
+		}
 		return locations.get(idx);
 	}
 	

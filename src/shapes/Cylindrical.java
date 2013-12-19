@@ -61,23 +61,23 @@ public class Cylindrical extends Shape {
 	}
 
 	@Override
-	public boolean isInside(double[] curAxes, JVector loc) {
+	public boolean isInside(double[] curAxes, JVector point) {
 		// currently the implementation of this method only works if unitAxes[0] is JVector.z
 		// curaxes[2] is the height of the cylinder
 		double height = curAxes[2];
 		// curaxes[0] is the radius of the cylinder
 		double r = curAxes[0];
-		double curZDist = loc.k - location.k;
+		double curZDist = point.k - location.k;
 		if(height <= Math.abs(curZDist)) {
 			return false;
 		}
 		
-		JVector xyLocProj = (JVector) loc.clone();
-		JVector xyLocationProj = (JVector) location.clone();
-		xyLocProj.k = 0;
-		xyLocationProj.k = 0; 
+		JVector xyPoint = (JVector) point.clone();
+		JVector xyCenter = (JVector) location.clone();
+		xyPoint.k = 0;
+		xyCenter.k = 0; 
 		
-		if(JVector.distance(xyLocProj, xyLocationProj) < r) {
+		if(JVector.distance(xyPoint, xyCenter) < r) {
 			return true;
 		}
 		return false;

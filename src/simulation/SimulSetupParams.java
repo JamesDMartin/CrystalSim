@@ -108,7 +108,7 @@ public class SimulSetupParams implements Serializable, Cloneable {
 	private double timeStep = 0.5;
 	private double startTime = 10;
 	
-	private int maxNumCrystals = 200;	
+	private int maxNumCrystals = Short.MAX_VALUE;	
 	
 	private int instancesToLaunch = 1;
 	

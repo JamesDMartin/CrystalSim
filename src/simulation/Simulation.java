@@ -95,7 +95,9 @@ public class Simulation extends Observable implements Runnable, Serializable {
 	 	 				attempts++;
 	 				}
 	 				if(attempts == MAX_ATTEMPTS) {
-	 					val = sample.registerNewCrystal(cf.getNewCrystal(time, sample.getRandomNucLoc()));
+	 					JVector location = sample.getRandomNucLoc();
+	 					if(location != null)
+	 						val = sample.registerNewCrystal(cf.getNewCrystal(time, location));
 	 				}
 				}	
 	 			attempts = 0;
@@ -127,13 +129,17 @@ public class Simulation extends Observable implements Runnable, Serializable {
 			}
 		} catch(Exception e) {
 			keepRunning = false;
+			String errormsg = StringConverter.arrayToNewLineString(e.getStackTrace());
+			notifyObservers(new String[] {MESSAGE, "Error:" + e.getLocalizedMessage()});
 		}
 		if(!keepRunning) {
 			setChanged();
 			mps.close();
 			notifyObservers(SIMULATION_KILLED);
 		} else {
-			if(output) {mps.print("\n\nSimulation Finished at: " + (new Date()).toString());}
+			if(output) {
+				mps.print("\n\nSimulation Finished at: " + (new Date()).toString());
+			}
 			try {
 				setChanged();
 				notifyObservers(new String[] {MESSAGE, "Writing XYZ to file: " + sp.getCurrentXYZFile(simulationIndex).getAbsolutePath()});
@@ -166,7 +172,7 @@ public class Simulation extends Observable implements Runnable, Serializable {
 		return false;
 	}
 	
-	public int getTotalVolume() { return sample.getTotalVolume(); }
+	public long getTotalVolume() { return sample.getTotalVolume(); }
 
 	private void printXYZ() {
 		if(sp.isXyz()) {
