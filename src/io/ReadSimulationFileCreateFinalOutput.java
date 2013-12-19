@@ -74,7 +74,7 @@ public class ReadSimulationFileCreateFinalOutput {
 			SimulSetupParams ssp = simul.getSSP();
 			ssp.setMovie(false);
 			ssp.setXyz(true);
-			Simulation simul2 = new Simulation(ssp, 0, 0, 0);
+			Simulation simul2 = new Simulation(ssp, simul.getSimulationIndex());
 			simul2.setRepeatParameters(nucleationLocations, nucleationOrientations, nucleationTimes);
 			FileOutputStream fos = new FileOutputStream("final.xyz");
 			simul2.ps1 = new PrintStream(fos);

@@ -27,9 +27,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import analysis.Analysis;
-
 import simulation.Crystal;
 import simulation.SimulSetupParams;
+import simulation.SimulSetupParams.DimensionalityOptions;
+import simulation.SimulSetupParams.FittableParametersOptions;
 import simulation.Simulation;
 
 public class ReadThinFilmSimulationFiles implements Runnable {
@@ -142,8 +143,11 @@ public class ReadThinFilmSimulationFiles implements Runnable {
 					println_system("n: " + n + "\tvolume: " + s.getTotalVolume());
 				}
 				try {
-					s.getSSP().setInit_n(n);
-					excel = a.analyzeFixedt0(s);
+					SimulSetupParams ssp = s.getSSP();
+					ssp.setInit_n(n);
+					ssp.setFittableParameterSelection(FittableParametersOptions.FIT_K_N);
+					ssp.setDimensionalitySelection(DimensionalityOptions.APPROXIMATE_BY_SAMPLE_SHAPE);
+					excel = a.analyze(s, ssp.getFittableParameterSelection(), ssp.getDimensionalitySelection());
 					printSomeCrystals(s.getSample().getCrystalArray());
 					try {
 						newCorr = a.getIndividualCorr();

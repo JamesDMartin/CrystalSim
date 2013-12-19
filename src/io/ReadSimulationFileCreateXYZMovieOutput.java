@@ -73,7 +73,7 @@ public class ReadSimulationFileCreateXYZMovieOutput {
 			}
 			SimulSetupParams ssp = simul.getSSP();
 			ssp.setMovie(true);
-			Simulation simul2 = new Simulation(ssp);
+			Simulation simul2 = new Simulation(ssp, simul.getSimulationIndex());
 			simul2.setRepeatParameters(nucleationLocations, nucleationOrientations, nucleationTimes);
 			FileOutputStream fos = new FileOutputStream("movie.xyz");
 			simul2.ps1 = new PrintStream(fos);
