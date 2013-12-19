@@ -1,16 +1,24 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Eric Dill -- eddill@ncsu.edu. North Carolina State University. All rights reserved.
+ * This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Eric Dill -- eddill@ncsu.edu - initial API and implementation
+ * 	James D. Martin -- jdmartin@ncsu.edu - Principal Investigator
+ ******************************************************************************/
 package simulation;
 
-import geometry.JVector;
 
 import java.io.Serializable;
-import java.util.Vector;
 
 public class Lattice implements Serializable {
 
 	private static final long serialVersionUID = -6957910015701592596L;
 	private int a, b, c;
 	private char[][][] subSystem;
-	private int[][] bounds = {{-1, 1}, {-1, 1}, {-1, 1}};
 	public Lattice(int numA, int numB, int numC) {
 		a = numA;
 		b = numB;

@@ -1,10 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Eric Dill -- eddill@ncsu.edu. North Carolina State University. All rights reserved.
+ * This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Eric Dill -- eddill@ncsu.edu - initial API and implementation
+ * 	James D. Martin -- jdmartin@ncsu.edu - Principal Investigator
+ ******************************************************************************/
 package simulation;
 
+import io.MyFileInputStream;
+import io.MyPrintStream;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -21,8 +32,8 @@ public class ConvertToHisto {
 	private double bin_step_kA = 0.01;
 	
 	public double[][] readFile() throws FileNotFoundException {
-		FileInputStream fis = new FileInputStream(aFile);
-		Scanner s = new Scanner(fis);
+		MyFileInputStream mfis = new MyFileInputStream(aFile);
+		Scanner s = mfis.getScanner();
 		
 		Vector<double[]> data = new Vector<double[]>();
 		String[] line;
@@ -69,20 +80,20 @@ public class ConvertToHisto {
 				idx++;
 			}
 		}
+		mfis.close();
 		return histogram2;
 	}
 	public void printFile(double[][] histogram) throws FileNotFoundException {
 		File outFile = new File(aFile.toString() + ".histo");
-		FileOutputStream fos = new FileOutputStream(outFile);
-		PrintStream ps = new PrintStream(fos);
+		MyPrintStream mps = new MyPrintStream(outFile);
 		
 		for(int i = 0; i < histogram.length; i++) {
 			for(int j = 0; j < histogram[i].length; j++) {
-				ps.print(histogram[i][j] + "\t");
+				mps.print(histogram[i][j] + "\t");
 			}
-			ps.println();
+			mps.println();
 		}
-		
+		mps.close();
 	}
 	
 	public static void main(String[] args) {

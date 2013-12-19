@@ -1,10 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Eric Dill -- eddill@ncsu.edu. North Carolina State University. All rights reserved.
+ * This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Eric Dill -- eddill@ncsu.edu - initial API and implementation
+ * 	James D. Martin -- jdmartin@ncsu.edu - Principal Investigator
+ ******************************************************************************/
 package simulation;
 
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
@@ -46,7 +56,6 @@ public class Sample implements Serializable {
 			l = new Lattice(unitsPerAxis[1]*2, unitsPerAxis[1]*2, unitsPerAxis[2]);
 			break;
 		}
-		int latticePoints = initLattice();
 		totalVolume = calculateTotalVolume();
 	}
 	private int initLattice() {
