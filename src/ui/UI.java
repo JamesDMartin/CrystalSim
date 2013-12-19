@@ -106,6 +106,7 @@ public class UI extends JFrame implements Observer {
 		pnlMain = new JPanel();
 		pnlTab = new JTabbedPane();
 		pnlTab.addTab("Simulation Settings", setupSettings());
+		pnlMain.setLayout(new BorderLayout());
 		pnlMain.add(pnlTab, BorderLayout.CENTER);
 		pnlMain.add(setupMessageWindow(), BorderLayout.SOUTH);
 		
@@ -127,15 +128,15 @@ public class UI extends JFrame implements Observer {
 		return spacer;
 	}
 	private JComponent setupMessageWindow() {
-		Box box = Box.createHorizontalBox();
+//		Box box = Box.createHorizontalBox();
 		messages = new JTextArea(15, 50);
 		messages.setMargin(new Insets(0, 5, 0, 5));
 		scroll = new JScrollPane(messages);
 		scroll.setVisible(true);
 		scroll.setSize(messages.getSize());
-		box.add(scroll);
-		box.add(Box.createHorizontalGlue());
-		return box;
+//		box.add(scroll);
+//		box.add(Box.createHorizontalGlue());
+		return scroll;
 	}
 	private JPanel setupSettings() {
 		pnlSettings = new JPanel();
