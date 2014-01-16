@@ -6,7 +6,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Contributors:
- *     Eric Dill -- eddill@ncsu.edu - initial API and implementation
+ *     Eric Dill -- eddill@ncsu.edu - Developer
  * 	James D. Martin -- jdmartin@ncsu.edu - Principal Investigator
  ******************************************************************************/
 package archivedUI;
