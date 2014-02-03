@@ -78,7 +78,7 @@ public class Analysis extends Observable {
 	public String getIndividualString() { return individualInfo; }
 	public boolean printObject = false;
 	public int numAnalyzed=0;
-	private int delayNucleationTimeBy = 50;
+	private int delayNucleationTimeBy = 00;
 	private Equation1 e = new SharpHancock(new double[] {1, 1, 1});
 	private Random rand = new Random();
 	private int numFittable = 0;

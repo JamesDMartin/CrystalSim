@@ -1549,7 +1549,7 @@ public class UI extends JFrame implements Observer {
 	private JPanel setupNucleation() {
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.X_AXIS));
-		pnl.setBorder(BorderFactory.createTitledBorder("Nucleation Parameters"));
+		pnl.setBorder(BorderFactory.createTitledBorder("Nucleation and Growth"));
 		pnl.add(setupNucleationShape());
 		pnl.add(setupGrowthRates());
 		pnl.add(setupNucleationType());
@@ -1817,7 +1817,7 @@ public class UI extends JFrame implements Observer {
 		Box box1 = Box.createHorizontalBox();
 		Box box2 = Box.createHorizontalBox();
 		Box box3 = Box.createHorizontalBox();
-		boxMain.setBorder(BorderFactory.createTitledBorder("Types of Nucleation"));
+		boxMain.setBorder(BorderFactory.createTitledBorder("Nucleation"));
 		
 		JLabel lbl1 = new JLabel("Initial number of seed crystals");
 		lbl1.setSize(lbl1.getPreferredSize());
