@@ -189,8 +189,8 @@ public class SimulSetupParams implements Serializable, Cloneable {
 
 		setOutput(ssp.isOutput());
 		setFit(ssp.isFit());
-		setXyz(ssp.isXyz());
-		setMovie(ssp.isMovie());
+		setXyz(ssp.isOutputtingXyz());
+		setMovie(ssp.isOutputtingMovie());
 		setObj(ssp.isObj());
 		setTransformed(ssp.isTransformed());
 		
@@ -351,7 +351,7 @@ public class SimulSetupParams implements Serializable, Cloneable {
 			s += "\t(" + i + ")\t" + getSampleUnitAxes()[i].toString();
 		}
 		s += "\nUnits per sample axis: " + StringConverter.arrayToTabString(getSampleUnitsPerAxis());
-		s += "\nOutput .xyz? " + isXyz();
+		s += "\nOutput .xyz? " + isOutputtingXyz();
 		s += "\nOutput transformation info? " + isTransformed();
 		s += "\nOutput non-linear fitting info? " + isFit();
 		s += "\nTime step: " + getTimeStep();
@@ -404,13 +404,13 @@ public class SimulSetupParams implements Serializable, Cloneable {
 	public void setTermVal(Object termVal) {
 		this.termVal = termVal;
 	}
-	public boolean isXyz() {
+	public boolean isOutputtingXyz() {
 		return xyz;
 	}
 	public void setXyz(boolean xyz) {
 		this.xyz = xyz;
 	}
-	public boolean isMovie() {
+	public boolean isOutputtingMovie() {
 		return movie;
 	}
 	public void setMovie(boolean movie) {

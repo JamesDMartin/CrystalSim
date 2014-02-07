@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.Stack;
 import java.util.Vector;
 
+import chemistry.JAtom;
 import shapes.Shape;
 import shapes.ShapeFactory;
 import shapes.ShapeTypes;
@@ -376,13 +377,17 @@ public class Sample implements Serializable {
 		return totalVolume; 
 	}
 	
-	public void printXYZ(PrintStream ps, boolean movie) {
+	public void printXYZ(PrintStream ps, boolean movie, double boomFactor) {
 		JVector pos = new JVector();
 		int Z, offset = 0;
 		String z = "";
 		// zero = the indices of the crystallites whose volume contain less than 10 lattice points
 		Integer[] zero = getCrystallitesToZero();
+		if(zero == null) // if this is null it is because all lattice points are untransformed
+			return;
 		int[] renumber = getCrystallitesToRenumber(zero);
+		renumber = null;
+		Vector<JAtom> vec = new Vector<JAtom>();
 		for(int i = 0; i < l.getX(); i++) {
 			pos.i = i;
 			String lines = "";
@@ -391,6 +396,8 @@ public class Sample implements Serializable {
 				for(int k = 0; k < l.getZ(); k++) {
 					pos.k = k;
 					Z = ((int) l.getVal(i, j, k));
+					if(Z == 0) 
+						Z = 1;
 					if(shape.isInside(unitsPerAxis_d, pos)) {
 						offset = 0;
 						if(Z > 0) {
@@ -399,18 +406,66 @@ public class Sample implements Serializable {
 						if(movie) {
 							z = intToZ(Z);
 						} else {
-							z = "" + getNewZVal(renumber, zero, Z);
+							Z = getNewZVal(renumber, zero, Z);
 						}
+						z = Z + "";
 						lines += z + "\t" + (i+offset) + "\t" + j + "\t" + k + "\n";
+						vec.add(new JAtom(Z, new JVector(pos.i + offset, pos.j, pos.k)));
 						
 					}
 				}
 			}
 			ps.print(lines);
 		}
+		ExplodeCrystal ec = new ExplodeCrystal(vec.toArray(new JAtom[vec.size()]), boomFactor);
+		ec.run();
+		JAtom[] arr = ec.getAtoms();
+		ps.println(arr.length);
+		ps.println("1");
+		for(JAtom atom : arr) {
+			ps.println(atom.toStringForXYZ());
+		}
+		ps.flush();
 	}
 	
+//	public void explode(PrintStream ps, double boomFactor) {
+//		Vector<JAtom> vec = new Vector<JAtom>();
+//		JVector pos = new JVector();
+//		int Z;
+//		int Zoffset = 0;
+//		for(int i = 0; i < l.getX(); i++) {
+//			pos.i = i;
+//			for(int j = 0; j < l.getY(); j++) {
+//				pos.j = j;
+//				for(int k = 0; k < l.getZ(); k++) {
+//					pos.k = k;
+//					Z = ((int) l.getVal(i, j, k)) + Zoffset;
+//					if(Z == 0) {
+//						vec = new Vector<JAtom>();
+//						i = 0;
+//						j = 0;
+//						k = 0;
+//						Zoffset = 1;
+//					} else
+//						if(shape.isInside(unitsPerAxis_d, pos)) 
+//							vec.add(new JAtom(Z, pos));
+//				}
+//			}
+//		}
+//		
+//		ExplodeCrystal ec = new ExplodeCrystal(vec.toArray(new JAtom[vec.size()]), boomFactor);
+//		ec.run();
+//		JAtom[] arr = ec.getAtoms();
+//		ps.println(arr.length);
+//		ps.println("1");
+//		for(JAtom atom : arr) {
+//			ps.println(atom.toStringForXYZ());
+//		}
+//		ps.flush();
+//	}
 	public int getNewZVal(int[] renumber, Integer[] zero, int Z) {
+		if(renumber == null)
+			return Z;
 		for(int i = 0; i < zero.length; i++) {
 			if(Z == zero[i]) {
 				return 0;
@@ -435,6 +490,8 @@ public class Sample implements Serializable {
 		// max = the largest crystallite index. since crystallites indices are incremented from 1, this also
 		// serves as the total number of crystallites
 		int max = getMaxIdx();
+		if(max == 0)
+			return null;
 		int[] toRenumber = new int[max - toZero.length-1];
 		boolean add = false;
 		int idx = 0;
@@ -464,6 +521,9 @@ public class Sample implements Serializable {
 	 */
 	public Integer[] getCrystallitesToZero() {
 		int max = getMaxIdx();
+//		if(max == Lattice.UNOCCUPIED_LATTICE_POINT)
+//			return null;
+		
 		JVector pos = new JVector();
 		int Z;
 		int[] numPerIdx = new int[max+1];
@@ -509,6 +569,10 @@ public class Sample implements Serializable {
 		}
 		return toZeroArray;
 	}
+	/**
+	 * Get the highest index of the transformed lattice
+	 * @return
+	 */
 	public int getMaxIdx() {
 		JVector pos = new JVector();
 		int Z;

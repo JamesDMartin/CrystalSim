@@ -45,13 +45,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import shapes.ShapeTypes;
 import simulation.NucleationOrientation;
 import simulation.SimulSetupParams;
-import simulation.SimulSetupParams.FittableParametersOptions;
-import simulation.SimulSetupParams.DimensionalityOptions;
+import simulation.s.FittableParametersOptions;
+import simulation.s.DimensionalityOptions;
 import simulation.Termination;
 
 public class UI extends JFrame implements Observer {
@@ -99,7 +100,7 @@ public class UI extends JFrame implements Observer {
 	
 	private Color badEntryColor = Color.YELLOW;
 	private Color okEntryColor = txtFileRoot.getBackground();
-	private Color uneditable = Color.LIGHT_GRAY;
+	private Color uneditable = Color.GRAY;
 	private NucleationOrientationSettingsFrame nucOrientSet;
 	private JButton btnOrientationSettings;
 	private void setup() {
@@ -172,7 +173,7 @@ public class UI extends JFrame implements Observer {
 	private JComponent setupSimulationExecutionPanel() {
 		Box box = Box.createVerticalBox();
 		
-		box.setBorder(BorderFactory.createTitledBorder("Simulation Execution"));
+		box.setBorder(getBoldTitledBorder("Simulation Execution", true, Color.GRAY));
 		
 		btnRunSimulation = new JButton("Run Simulation");
 		Font f = btnRunSimulation.getFont();
@@ -188,10 +189,9 @@ public class UI extends JFrame implements Observer {
 				}
 			}
 		});
-		
 		Box box1 = Box.createHorizontalBox();
 		box1.add(btnRunSimulation);
-		box1.add(Box.createHorizontalGlue());
+//		box1.add(Box.createHorizontalGlue());
 		box.add(box1);
 		box.add(Box.createVerticalStrut(10));
 		simPanel = new RunningSimulationPanel();
@@ -203,7 +203,8 @@ public class UI extends JFrame implements Observer {
 		JPanel pnl = new JPanel();
 		JPanel[] pnls = {new JPanel(), new JPanel(), new JPanel() };
 		
-		pnl.setBorder(BorderFactory.createTitledBorder("Simulation End Conditions"));
+		pnl.setBorder(getBoldTitledBorder("Simulation End Conditions", true, Color.GRAY));
+		
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
 		pnls[0].setLayout(new GridLayout(1, 2));
 		pnls[1].setLayout(new GridLayout(1, 2));
@@ -221,8 +222,8 @@ public class UI extends JFrame implements Observer {
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JCheckBox chk = (JCheckBox) arg0.getSource();
-				String s = chk.getText();
+				JRadioButton btn = (JRadioButton) arg0.getSource();
+				String s = btn.getText();
 				int idx = 0;
 				for(int i = 0; i < labels.length; i++) {
 					fields[i].setEnabled(false);
@@ -238,15 +239,15 @@ public class UI extends JFrame implements Observer {
 			}
 		};
 		ButtonGroup group = new ButtonGroup();
-		JCheckBox chk = null;
+		JRadioButton btn = null;
 		for(int i = 0; i < labels.length; i++) {
-			chk = new JCheckBox(labels[i]);
-			chk.addActionListener(listener);
-			if(i == 0) { chk.setSelected(true); }
-			group.add(chk);
-			pnls[i].add(chk);
+			btn = new JRadioButton(labels[i]);
+			btn.addActionListener(listener);
+			if(i == 0) { btn.setSelected(true); }
+			group.add(btn);
+			pnls[i].add(btn);
 			if(i == 0) {
-				listener.actionPerformed(new ActionEvent(chk, 0, ""));
+				listener.actionPerformed(new ActionEvent(btn, 0, ""));
 			}
 			if(i == 2) {
 				pnls[i].add(getSpacer(new Dimension(15, 5)));
@@ -320,7 +321,7 @@ public class UI extends JFrame implements Observer {
 	}
 	private JPanel setupFileIO() {
 		JPanel pnlMain = new JPanel();
-		pnlMain.setBorder(BorderFactory.createTitledBorder("File I/O"));
+		pnlMain.setBorder(getBoldTitledBorder("File I/O", true, Color.GRAY));
 		
 		Box boxMain = Box.createVerticalBox();
 		final JLabel lblXYZ = new JLabel(currentParams.getXYZsFolder().toString()),
@@ -426,10 +427,10 @@ public class UI extends JFrame implements Observer {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					JCheckBox chk = (JCheckBox) e.getSource();
-					if(chk.getText().compareTo(btnLabels[0]) == 0 && !currentParams.isXyz()) {
+					if(chk.getText().compareTo(btnLabels[0]) == 0 && !currentParams.isOutputtingXyz()) {
 						currentParams.setXyz(true);
 						message("Structure output enabled.");
-					} else if(chk.getText().compareTo(btnLabels[1]) == 0 && currentParams.isXyz()){
+					} else if(chk.getText().compareTo(btnLabels[1]) == 0 && currentParams.isOutputtingXyz()){
 						currentParams.setXyz(false);
 						message("Structure output disabled");
 					}
@@ -441,7 +442,7 @@ public class UI extends JFrame implements Observer {
 			
 			chk1.addActionListener(al1);
 			chk2.addActionListener(al1);
-			if(currentParams.isXyz()) {
+			if(currentParams.isOutputtingXyz()) {
 				chk1.setSelected(true);
 			} else {
 				chk2.setSelected(true);
@@ -469,10 +470,10 @@ public class UI extends JFrame implements Observer {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					JCheckBox chk = (JCheckBox) e.getSource();
-					if(chk.getText().compareTo(btnLabels[0]) == 0 && !currentParams.isMovie()) {
+					if(chk.getText().compareTo(btnLabels[0]) == 0 && !currentParams.isOutputtingMovie()) {
 						currentParams.setMovie(true);
 						message("Movie output enabled.");
-					} else if(chk.getText().compareTo(btnLabels[1]) == 0 && currentParams.isMovie()){
+					} else if(chk.getText().compareTo(btnLabels[1]) == 0 && currentParams.isOutputtingMovie()){
 						currentParams.setMovie(false);
 						message("Movie output disabled");
 					}
@@ -484,7 +485,7 @@ public class UI extends JFrame implements Observer {
 			
 			chk1.addActionListener(al1);
 			chk2.addActionListener(al1);
-			if(currentParams.isMovie()) {
+			if(currentParams.isOutputtingMovie()) {
 				chk1.setSelected(true);
 			} else {
 				chk2.setSelected(true);
@@ -635,8 +636,7 @@ public class UI extends JFrame implements Observer {
 	}
 	private Component setupSample() {
 		Box boxMain = Box.createVerticalBox();
-		boxMain.setBorder(BorderFactory.createTitledBorder("Simulation volume parameters"));
-
+		boxMain.setBorder(getBoldTitledBorder("Sample Volume", true, Color.GRAY));
 		Box box2 = Box.createHorizontalBox();
 		box2.add(setupSampleShape());
 		box2.add(Box.createHorizontalStrut(10));
@@ -691,7 +691,7 @@ public class UI extends JFrame implements Observer {
 	}
 	private JComponent setupFittingParameters() {
 		JPanel pnlMain = new JPanel();
-		pnlMain.setBorder(BorderFactory.createTitledBorder("Fitting Parameters"));
+		pnlMain.setBorder(getBoldTitledBorder("Fitting Parameters", true, Color.GRAY));
 		pnlMain.setLayout(new GridLayout(0, 3));
 		
 		ActionListener al = new ActionListener() {
@@ -728,8 +728,7 @@ public class UI extends JFrame implements Observer {
 	}
 	private JComponent setupDimensionalityOptions() {
 		JPanel pnlMain = new JPanel();
-		pnlMain.setBorder(BorderFactory.createTitledBorder("Dimensionality"));
-		
+		pnlMain.setBorder(getBoldTitledBorder("Dimensionality", true, Color.GRAY));
 		Box box = Box.createVerticalBox();
 		
 		ActionListener al = new ActionListener() {
@@ -753,20 +752,22 @@ public class UI extends JFrame implements Observer {
 			tog.setName(options.name());
 			tog.addActionListener(al);
 			bg.add(tog);
-			box.add(tog);
+			Box box1 = Box.createHorizontalBox();
+			box1.add(tog);
+			box.add(box1);
 		}
-		for(Component comp : box.getComponents()) {
-			String compName = comp.getName();
-			if(DimensionalityOptions.valueOf(compName) == currentParams.getDimensionalitySelection())
-				((JToggleButton) comp).doClick();
-		}
+//		for(Component comp : box.getComponents()) {
+//			String compName = comp.getName();
+//			if(DimensionalityOptions.valueOf(compName) == currentParams.getDimensionalitySelection())
+//				((JToggleButton) comp).doClick();
+//		}
 		pnlMain.add(box);
+		pnlMain.setMaximumSize(pnlMain.getPreferredSize());
 		return pnlMain;
 	}
 	private JComponent setupMiscOptions() {
 		Box boxMain = Box.createVerticalBox();
-		boxMain.setBorder(BorderFactory.createTitledBorder("Misc Options"));
-		
+		boxMain.setBorder(getBoldTitledBorder("Misc Options", true, Color.GRAY));
 		Box box2 = Box.createHorizontalBox();
 		Box box3 = Box.createHorizontalBox();
 		Box box4 = Box.createHorizontalBox();
@@ -923,13 +924,14 @@ public class UI extends JFrame implements Observer {
 	}
 	private JComponent setupSampleUnits() {
 		Box box = Box.createVerticalBox();
-		box.setBorder(BorderFactory.createTitledBorder("Units per axis"));
+		box.setBorder(getBoldTitledBorder("Sample Axes", false, Color.LIGHT_GRAY));
 		Box box1 = Box.createHorizontalBox();
 		box1.add(setupUnits());
 		setUnitsVisibility();
 		box.add(box1);
 		box.add(Box.createVerticalStrut(5));
 		box.add(setupSampleVolume());
+		box.setMaximumSize(box.getPreferredSize());
 		return box;
 	}
 	private Component setupSampleVolume() {
@@ -943,12 +945,13 @@ public class UI extends JFrame implements Observer {
 		return box;
 	}
 	private JComponent setupUnits() {
-		JPanel pnl = new JPanel();
-		pnl.setLayout(new GridLayout(2, 3));
+		JPanel pnlMain = new JPanel();
 		
-		lblUnits1 = new JLabel("1");
-		lblUnits2 = new JLabel("2");
-		lblUnits3 = new JLabel("3");
+		pnlMain.setLayout(new GridLayout(3, 2));
+		
+		lblUnits1 = new JLabel("1", JLabel.CENTER);
+		lblUnits2 = new JLabel("2", JLabel.CENTER);
+		lblUnits3 = new JLabel("3", JLabel.CENTER);
 		
 		txtUnits1 = new JTextField(5);
 		txtUnits2 = new JTextField(5);
@@ -962,31 +965,13 @@ public class UI extends JFrame implements Observer {
 		txtUnits2.setText("" + currentParams.getSampleUnitsPerAxis()[1]);
 		txtUnits3.setText("" + currentParams.getSampleUnitsPerAxis()[2]);
 
-		Box box1 = Box.createHorizontalBox();
-		box1.add(txtUnits1);
-		box1.add(Box.createHorizontalStrut(5));
-		box1.add(lblUnits1);
-		box1.add(Box.createHorizontalGlue());
-		
-		Box box2 = Box.createHorizontalBox();
-		box2.add(txtUnits2);
-		box2.add(Box.createHorizontalStrut(5));
-		box2.add(lblUnits2);
-		box2.add(Box.createHorizontalGlue());
-
-		Box box3 = Box.createHorizontalBox();
-		box3.add(txtUnits3);
-		box3.add(Box.createHorizontalStrut(5));
-		box3.add(lblUnits3);
-		box3.add(Box.createHorizontalGlue());
-
-		Box box = Box.createVerticalBox();
-		box.add(box1);
-		box.add(Box.createVerticalStrut(5));
-		box.add(box2);
-		box.add(Box.createVerticalStrut(5));
-		box.add(box3);
-		box.add(Box.createVerticalStrut(5));
+		// TODO Fix this so that it looks the same as the crystallite growth rates
+		pnlMain.add(lblUnits1);
+		pnlMain.add(txtUnits1);
+		pnlMain.add(lblUnits2);
+		pnlMain.add(txtUnits2);
+		pnlMain.add(lblUnits3);
+		pnlMain.add(txtUnits3);
 		
 		txtUnits1.addFocusListener(new FocusListener() {
 
@@ -1064,12 +1049,12 @@ public class UI extends JFrame implements Observer {
 				((JTextField) e.getSource()).selectAll(); 
 			}
 		});
-		return box;
+		return pnlMain;
 	}
 	private JPanel setupSampleShape() {
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
-		pnl.setBorder(BorderFactory.createTitledBorder("Sample Shape"));
+		pnl.setBorder(getBoldTitledBorder("Sample Shape", false, Color.LIGHT_GRAY));
 		pnl.setSize(pnl.getPreferredSize());
 		ShapeTypes[] types = ShapeTypes.values();
 		ButtonGroup btnCrystalShapes = new ButtonGroup();
@@ -1097,7 +1082,7 @@ public class UI extends JFrame implements Observer {
 	}
 	private JPanel setupParameters() {
 		pnlParams = new JPanel();
-		pnlParams.setBorder(BorderFactory.createTitledBorder("Current Parameters"));
+		pnlParams.setBorder(getBoldTitledBorder("Current Parameters", true, Color.GRAY));
 		Box box = Box.createHorizontalBox();
 		box.add(paramLabels());
 		box.add(Box.createHorizontalStrut(10));
@@ -1282,7 +1267,7 @@ public class UI extends JFrame implements Observer {
 		
 		boxH = Box.createHorizontalBox();
 		boxH.add(Box.createHorizontalGlue());
-		if(currentParams.isXyz()) {
+		if(currentParams.isOutputtingXyz()) {
 			box.add(Box.createVerticalStrut(height));
 			boxH.add(new JLabel("Structure output folder"));
 			box.add(boxH);
@@ -1319,7 +1304,7 @@ public class UI extends JFrame implements Observer {
 		
 		boxH = Box.createHorizontalBox();
 		boxH.add(Box.createHorizontalGlue());
-		if(currentParams.isMovie()) {
+		if(currentParams.isOutputtingMovie()) {
 			box.add(Box.createVerticalStrut(height));
 			boxH.add(new JLabel("Movie output folder"));
 			box.add(boxH);
@@ -1495,7 +1480,7 @@ public class UI extends JFrame implements Observer {
 			box.add(new JLabel("No"));
 		}
 		
-		if(currentParams.isXyz()) {
+		if(currentParams.isOutputtingXyz()) {
 			box.add(Box.createVerticalStrut(height));
 			box.add(new JLabel("Yes"));
 			box.add(Box.createVerticalStrut(height));
@@ -1518,7 +1503,7 @@ public class UI extends JFrame implements Observer {
 			box.add(new JLabel("No"));
 		}
 		
-		if(currentParams.isMovie()) {
+		if(currentParams.isOutputtingMovie()) {
 			box.add(Box.createVerticalStrut(height));
 			box.add(new JLabel("Yes"));
 			box.add(Box.createVerticalStrut(height));
@@ -1549,7 +1534,9 @@ public class UI extends JFrame implements Observer {
 	private JPanel setupNucleation() {
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.X_AXIS));
-		pnl.setBorder(BorderFactory.createTitledBorder("Nucleation and Growth"));
+		pnl.setBorder(getBoldTitledBorder("Nucleation and Growth", true, Color.gray));
+//		Font f = b.getTitleFont();
+//		b.setTitleFont(new Font(f.getName(), Font.BOLD, f.getSize()));
 		pnl.add(setupNucleationShape());
 		pnl.add(setupGrowthRates());
 		pnl.add(setupNucleationType());
@@ -1559,12 +1546,10 @@ public class UI extends JFrame implements Observer {
 	private JPanel setupGrowthRates() {
 		pnlRates = new JPanel();
 		pnlRates.setLayout(new BoxLayout(pnlRates, BoxLayout.X_AXIS));
-		TitledBorder b = BorderFactory.createTitledBorder("Axial Growth Velocity");
-		Dimension d = b.getMinimumSize(pnlRates);
-		pnlRates.setBorder(b);
-		pnlRates.setMinimumSize(d);
+		pnlRates.setBorder(getBoldTitledBorder("Growth Rate", false, Color.LIGHT_GRAY));
 		pnlRates.add(setupRates());
 		setRateVisibility();
+		pnlRates.setMaximumSize(pnlRates.getPreferredSize());
 		return pnlRates;
 	}
 	private void setRateVisibility() {
@@ -1617,9 +1602,9 @@ public class UI extends JFrame implements Observer {
 		
 		pnlMain.setLayout(new GridLayout(3, 2));
 		
-		lblRate1 = new JLabel("r1");
-		lblRate2 = new JLabel("r2");
-		lblRate3 = new JLabel("r3");
+		lblRate1 = new JLabel("r1", JLabel.CENTER);
+		lblRate2 = new JLabel("r2", JLabel.CENTER);
+		lblRate3 = new JLabel("r3", JLabel.CENTER);
 		
 		txtRate1 = new JTextField(5);
 		txtRate2 = new JTextField(5);
@@ -1726,7 +1711,7 @@ public class UI extends JFrame implements Observer {
 	private JPanel setupNucleationOrientation() {
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
-		pnl.setBorder(BorderFactory.createTitledBorder("Crystal Orientation"));
+		pnl.setBorder(getBoldTitledBorder("Crystal Orientation", false, Color.LIGHT_GRAY));
 		pnl.setSize(pnl.getPreferredSize());
 		NucleationOrientation[] nucOrient = NucleationOrientation.values();
 		ButtonGroup group = new ButtonGroup();
@@ -1788,7 +1773,7 @@ public class UI extends JFrame implements Observer {
 	private JPanel setupNucleationShape() {
 		JPanel pnl = new JPanel();
 		pnl.setLayout(new BoxLayout(pnl, BoxLayout.Y_AXIS));
-		pnl.setBorder(BorderFactory.createTitledBorder("Crystal Shape"));
+		pnl.setBorder(getBoldTitledBorder("Crystal Shape", false, Color.LIGHT_GRAY));
 		pnl.setSize(pnl.getPreferredSize());
 		ShapeTypes[] types = ShapeTypes.values();
 		ButtonGroup btnCrystalShapes = new ButtonGroup();
@@ -1817,7 +1802,7 @@ public class UI extends JFrame implements Observer {
 		Box box1 = Box.createHorizontalBox();
 		Box box2 = Box.createHorizontalBox();
 		Box box3 = Box.createHorizontalBox();
-		boxMain.setBorder(BorderFactory.createTitledBorder("Nucleation"));
+		boxMain.setBorder(getBoldTitledBorder("Nucleation", false, Color.LIGHT_GRAY));
 		
 		JLabel lbl1 = new JLabel("Initial number of seed crystals");
 		lbl1.setSize(lbl1.getPreferredSize());
@@ -2096,5 +2081,15 @@ public class UI extends JFrame implements Observer {
 		} else if(arg1 instanceof String) {
 			message((String) arg1);
 		}
+	}
+	private TitledBorder getBoldTitledBorder(String title, boolean bold, Color borderColor) {
+
+		int style = bold ? Font.BOLD : Font.PLAIN;
+		Font f = new JPanel().getFont();
+		Border border = BorderFactory.createLineBorder(borderColor, 2);
+		TitledBorder b = BorderFactory.createTitledBorder(border, 
+				title, TitledBorder.CENTER , TitledBorder.TOP, 
+				new Font(f.getName(), style, f.getSize()));
+		return b;
 	}
 }

@@ -112,30 +112,36 @@ public class RunningSimulationPanel extends Observable implements Observer {
 		
 		
 		box0.add(btnEnd);
+//		box0.add(Box.createHorizontalGlue());
+		
 		bar1 = new JProgressBar(0, 100);
 		bar1.setStringPainted(true);
 		bar1.setString("Simulation " + numSimulations);
 		Box box1 = Box.createHorizontalBox();
 		box1.add(bar1);
-		box1.add(Box.createHorizontalStrut(10));
+//		box1.add(Box.createHorizontalGlue());
 		
 		Box box2 = Box.createHorizontalBox();
 		bar2 = new JProgressBar(0, 100);
 		bar2.setStringPainted(true);
 		box2.add(bar2);
-		box2.add(Box.createHorizontalStrut(10));
+//		box2.add(Box.createHorizontalGlue());
 		
 		
 		Box box3 = Box.createHorizontalBox();
 		lblSampleShape = new JLabel(ShapeTypes.Cubic.name() + "");
 		box3.add(lblSampleShape);
-		box3.add(Box.createHorizontalStrut(10));
-		lblSampleAxes = new JLabel("(a) = (50)");
-		box3.add(lblSampleAxes);
+//		box3.add(Box.createHorizontalGlue());
 		
 		Box box4 = Box.createHorizontalBox();
+		lblSampleAxes = new JLabel("(a) = (50)");
+		box4.add(lblSampleAxes);
+//		box4.add(Box.createHorizontalGlue());
+		
+		Box box5 = Box.createHorizontalBox();
 		lblVolume = new JLabel("Approximate simulation volume = 0");
-		box4.add(lblVolume);
+		box5.add(lblVolume);
+//		box5.add(Box.createHorizontalGlue());
 
 		boxMain.add(box0);
 		boxMain.add(Box.createVerticalStrut(5));
@@ -147,7 +153,9 @@ public class RunningSimulationPanel extends Observable implements Observer {
 		boxMain.add(Box.createVerticalStrut(5));
 		boxMain.add(box4);
 		boxMain.add(Box.createVerticalStrut(5));
-		boxMain.setMaximumSize(boxMain.getPreferredSize());
+		boxMain.add(box5);
+		boxMain.add(Box.createVerticalStrut(5));
+//		boxMain.setMaximumSize(boxMain.getPreferredSize());
 		
 		boxMain.add(Box.createVerticalStrut(10));
 		boxMain.add(Box.createVerticalGlue());

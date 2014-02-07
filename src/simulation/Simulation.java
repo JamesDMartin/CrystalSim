@@ -38,10 +38,12 @@ public class Simulation extends Observable implements Runnable, Serializable {
 	private Random r;
 	private double time;
 	private double fractionComplete;
+	private double boomFactor = 1.5;
 	public final static int FINISHED = 1;
 	private final static int MAX_ATTEMPTS = 50;
 	private boolean output;
 	private MyPrintStream mps;
+	private MyPrintStream mps_movie;
 	public PrintStream ps1;
 	public boolean keepRunning = true;
 	public File xyz;
@@ -62,6 +64,8 @@ public class Simulation extends Observable implements Runnable, Serializable {
 		if(output) {
 			mps = new MyPrintStream(sp.getCurrentTransformationFile(simulationIndex));
 		}
+		if(sp.isOutputtingMovie())
+			mps_movie = new MyPrintStream(sp.getMoviesFile());
 	}
 	
 	@Override
@@ -117,9 +121,9 @@ public class Simulation extends Observable implements Runnable, Serializable {
 				notifyObservers(new String[] {UPDATE_PERCENT, fractionComplete + ""});
 	//			setChanged();
 	//			notifyObservers(new String[] {"update", msg});
-				if(sp.isMovie()) {
-					outputMovie(time);
-					outputMovie2(time);
+				if(sp.isOutputtingMovie()) {
+					outputMovie();
+//					outputMovie2(time);
 				}
 				time += sp.getTimeStep();
 				setChanged();
@@ -175,7 +179,7 @@ public class Simulation extends Observable implements Runnable, Serializable {
 	public long getTotalVolume() { return sample.getTotalVolume(); }
 
 	private void printXYZ() {
-		if(sp.isXyz()) {
+		if(sp.isOutputtingXyz()) {
 			FileOutputStream fos = null;
 			try {
 				fos = new FileOutputStream(sp.getCurrentXYZFile(simulationIndex));
@@ -185,8 +189,10 @@ public class Simulation extends Observable implements Runnable, Serializable {
 			}
 			PrintStream ps = new PrintStream(fos);
 			
-			ps.println(sample.getTotalVolume() + "\n");
-			sample.printXYZ(ps, sp.isMovie());
+			ps.println(sample.getTotalVolume());
+			ps.println("0");
+			sample.printXYZ(ps, false, boomFactor);
+//			sample.explode(ps, boomFactor);
 			ps.close();
 			try {
 				fos.close();
@@ -209,23 +215,16 @@ public class Simulation extends Observable implements Runnable, Serializable {
 			sample.registerNewCrystal(cf.getNewCrystal(nucTimes[i], nucLocations[i], nucOrientations[i]));
 		}
 	}
-	private void outputMovie(double time) {
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream(time + ".xyz");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		PrintStream ps = new PrintStream(fos);
+	private void outputMovie() {
+		PrintStream ps = mps_movie.getPrintStream();
 		ps.println(sample.getTotalVolume());
-		ps.println(" " + idx++);
-		sample.printXYZ(ps, sp.isMovie());
+		ps.println(idx++);
+		sample.printXYZ(ps, sp.isOutputtingMovie());
 	}
 	private void outputMovie2(double time) {
 		ps1.println(sample.getTotalVolume());
 		ps1.println(" " + idx++);
-		sample.printXYZ(ps1, sp.isMovie());
+		sample.printXYZ(ps1, sp.isOutputtingMovie());
 	}
 	private int idx = 0;
 	public int getSimulationIndex() { return simulationIndex; }
@@ -236,8 +235,14 @@ public class Simulation extends Observable implements Runnable, Serializable {
 	}
 	public void closeStreams() {
 		if(output) {
-			if(mps != null)
+			if(mps != null) {
 				mps.close();
+				mps = null;
+			}
+			if(mps_movie != null) {
+				mps_movie.close();
+				mps_movie = null;
+			}
 		}
 	}
 

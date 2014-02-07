@@ -30,8 +30,8 @@ import java.util.zip.ZipException;
 import analysis.Analysis;
 import email.SendMailTLS;
 import simulation.SimulSetupParams;
-import simulation.SimulSetupParams.DimensionalityOptions;
-import simulation.SimulSetupParams.FittableParametersOptions;
+import simulation.s.DimensionalityOptions;
+import simulation.s.FittableParametersOptions;
 import simulation.Simulation;
 
 public class SimulationController_UI extends Observable implements Observer {
@@ -156,6 +156,8 @@ public class SimulationController_UI extends Observable implements Observer {
 		objOut.close();
 		ps_analysis.close();
 		sp.nullify();
+		for(Simulation simul : simulations)
+			simul.closeStreams();
 	}
 	
 	public void analyze(int index) throws IOException {

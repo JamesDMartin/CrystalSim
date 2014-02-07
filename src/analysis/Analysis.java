@@ -33,9 +33,9 @@ import simulation.Crystal;
 import simulation.IndividualCrystalliteAnisotropy;
 import simulation.Sample;
 import simulation.SimulSetupParams;
-import simulation.SimulSetupParams.DimensionalityOptions;
-import simulation.SimulSetupParams.FittableParametersOptions;
-import simulation.SimulSetupParams.FittingType;
+import simulation.s.DimensionalityOptions;
+import simulation.s.FittableParametersOptions;
+import simulation.s.FittingType;
 import simulation.Simulation;
 import _TESTING_regression.RegressionException;
 import _TESTING_regression.RegressionNonLinear;
@@ -656,7 +656,7 @@ public class Analysis extends Observable {
 		// ln(d/h)
 		simul += (Math.log(ssp.getSampleUnitsPerAxis()[0]*2/ssp.getSampleUnitsPerAxis()[2])) + "\t";
 		// xyz file
-		simul += ssp.getXYZsFolder().getAbsolutePath() + "\t" + ssp.isXyz() + "\t";
+		simul += ssp.getXYZsFolder().getAbsolutePath() + "\t" + ssp.isOutputtingXyz() + "\t";
 		// trans file
 		simul += ssp.getTransformationsFolder().getAbsolutePath() + "\t" + ssp.isTransformed() + "\t";
 		// delta t

@@ -35,7 +35,7 @@ import analysis.Analysis;
 
 
 import simulation.SimulSetupParams;
-import simulation.SimulSetupParams.FittingType;
+import simulation.s.FittingType;
 import simulation.Simulation;
 
 public class ReadSimulationFiles implements Runnable {

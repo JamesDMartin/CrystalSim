@@ -14,31 +14,46 @@ package simulation;
 import geometry.JVector;
 import io.MyFileInputStream;
 import io.MyPrintStream;
+
 import java.io.File;
 import java.util.Scanner;
 
 import chemistry.JAtom;
+import chemistry.JAtomTools;
 
 public class ExplodeCrystal {
 
 	private JAtom[] atoms;
 	private int numAtomTypes;
 	private double boomFactor;
-	private String fileRoot;
+	private String fileRoot = "";
 	private JVector sampleCM;
 	private int numAtoms;
 	
 	/**
 	 * 
 	 * @param file String that points to a .xyz file WITHOUT THE .XYZ EXTENSION
-	 * @param boom_factor > 0 indicates that the output will be an exploded view.  < 0 indicates that the output will be an imploded view
+	 * @param boomFactor > 0 indicates that the output will be an exploded view.  < 0 indicates that the output will be an imploded view
 	 */
-	public ExplodeCrystal(String fileRoot, double boom_factor) {
+	public ExplodeCrystal(String fileRoot, double boomFactor) {
 		this.fileRoot = fileRoot;
-		this.boomFactor = boom_factor;
+		this.boomFactor = boomFactor;
+	}
+	/**
+	 * 
+	 * @param atoms List of atoms in the crystal to explode
+	 * @param boomFactor > 0 indicates that the output will be an exploded view.  < 0 indicates that the output will be an imploded view
+	 */
+	public ExplodeCrystal(JAtom[] atoms, double boomFactor) {
+		this.atoms = atoms;
+		this.boomFactor = boomFactor;
+		numAtoms = this.atoms.length;
 	}
 	public void run() {
-		readFile();
+		if(fileRoot != "")
+			readFile();
+		determineNumAtomTypes();
+		computeCM();
 		explode();
 		print();
 	}
@@ -50,23 +65,43 @@ public class ExplodeCrystal {
 		s.nextLine();
 		s.nextLine();
 		double x, y, z;
-		int Z, maxZ = 0;
+		int Z;
 		int idx = 0;
-		sampleCM = new JVector();
-		while (s.hasNextLine()) {
+		boolean keepReading = true;
+		while (s.hasNextLine() && keepReading) {
 			line = s.nextLine().split("\t");
-			Z = Integer.valueOf(line[0]);
-			if(Z > maxZ) { maxZ = Z; }
-			x = Double.valueOf(line[1]);
-			y = Double.valueOf(line[2]);
-			z = Double.valueOf(line[3]);
-			sampleCM.i += x;
-			sampleCM.j += y;
-			sampleCM.k += z;
-			atoms[idx++] = new JAtom(Z, x, y, z);
+			if(line.length == 4) {
+				try {
+					Z = Integer.valueOf(line[0]);
+				} catch(NumberFormatException nfe) {
+					Z = JAtomTools.getZ(line[0]);
+					if(Z == 0)
+						Z = 1;
+				}
+				x = Double.valueOf(line[1]);
+				y = Double.valueOf(line[2]);
+				z = Double.valueOf(line[3]);
+				atoms[idx++] = new JAtom(Z, x, y, z);
+			} else if(line.length == 1) {
+				if(Integer.valueOf(line[0]) != 0)
+					keepReading = false;
+			}
+		}
+	}
+	private void determineNumAtomTypes() {
+		int maxZ = 0;
+		for(JAtom atom : atoms) {
+			if(atom.getZ() > maxZ) { maxZ = atom.getZ(); }
+			
 		}
 		numAtomTypes = maxZ;
-		sampleCM = JVector.multiply(sampleCM, 1./((double) numAtoms));
+	}
+	private void computeCM() {
+		sampleCM = new JVector();
+		for(JAtom atom : atoms) {
+			sampleCM.add(atom.getPosition());
+		}
+		sampleCM.multiply(1./((double) numAtoms));
 	}
 	private JVector[] getDisplacementVectors() {
 		JVector[] displace = new JVector[numAtomTypes];
@@ -99,7 +134,7 @@ public class ExplodeCrystal {
 		
 	}
 	
-	private void print() {
+	public void print() {
 		File out = new File(fileRoot + "_" + "explodedBy_" + boomFactor + ".xyz");
 		MyPrintStream mps = new MyPrintStream(out);
 
@@ -109,10 +144,13 @@ public class ExplodeCrystal {
 		}
 		mps.close();
 	}
+	public JAtom[] getAtoms() { return atoms; }
+	public void setAtoms(JAtom[] atoms) { this.atoms = atoms; }
 	public static void main(String[] args) {
-		String root = "2-15-2013_14-45-1";
+		String root = "C:\\Users\\Eric\\git\\CrystalSim\\output\\CrystallizationSimulation -- structures\\CrystallizationSimulation -- structure -- 0";
 		double boomFactor = 1.5;
 		ExplodeCrystal ec = new ExplodeCrystal(root, boomFactor);
 		ec.run();
+		ec.print();
 	}
 }
