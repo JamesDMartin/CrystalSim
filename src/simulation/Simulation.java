@@ -219,12 +219,7 @@ public class Simulation extends Observable implements Runnable, Serializable {
 		PrintStream ps = mps_movie.getPrintStream();
 		ps.println(sample.getTotalVolume());
 		ps.println(idx++);
-		sample.printXYZ(ps, sp.isOutputtingMovie());
-	}
-	private void outputMovie2(double time) {
-		ps1.println(sample.getTotalVolume());
-		ps1.println(" " + idx++);
-		sample.printXYZ(ps1, sp.isOutputtingMovie());
+		sample.printXYZ(ps, sp.isOutputtingMovie(), boomFactor);
 	}
 	private int idx = 0;
 	public int getSimulationIndex() { return simulationIndex; }

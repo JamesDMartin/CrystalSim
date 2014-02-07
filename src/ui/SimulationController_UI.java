@@ -30,14 +30,15 @@ import java.util.zip.ZipException;
 import analysis.Analysis;
 import email.SendMailTLS;
 import simulation.SimulSetupParams;
-import simulation.s.DimensionalityOptions;
-import simulation.s.FittableParametersOptions;
+import simulation.DimensionalityOptions;
+import simulation.FittableParametersOptions;
 import simulation.Simulation;
 
 public class SimulationController_UI extends Observable implements Observer {
 
 	public SimulSetupParams sp;
 	private File fName;
+	private Simulation currentSimulation;
 	private int desiredIterations,  whichFitting;
 	private long totalVolume, currentVolume;
 	private Vector<Simulation> simulations;

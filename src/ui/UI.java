@@ -49,10 +49,10 @@ import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import shapes.ShapeTypes;
+import simulation.FittableParametersOptions;
 import simulation.NucleationOrientation;
+import simulation.DimensionalityOptions;
 import simulation.SimulSetupParams;
-import simulation.s.FittableParametersOptions;
-import simulation.s.DimensionalityOptions;
 import simulation.Termination;
 
 public class UI extends JFrame implements Observer {
