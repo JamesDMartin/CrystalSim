@@ -8,3 +8,7 @@ Development in progress, use at own risk! Contact: (Developer) Dr. Eric Dill edd
 Currently requires https://github.com/ericdill/GlobalPackages
 
 This software was developed in the Eclipse IDE (Kepler) with Java 1.7.  This repo can be used directly from within Eclipse with the EGit addin.
+
+See "Readme.docx" in the 'doc' folder.
+
+A class diagram is available in the 'doc' folder.
