@@ -1,3 +1,9 @@
+# Local files created by CrystalSim
 /bin
 /output
 /xyz
+
+# Eclipse IDE
+.classpath
+.project
+.settings/
