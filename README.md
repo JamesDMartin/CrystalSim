@@ -1,7 +1,7 @@
 CrystalSim
 ==============
 
-GUI environment for simulating various aspects of the crystallization process. Initial project setup.  This software is not yet guaranteed to run flawlessly and critical errors may be experienced.  Please let me know if you run into problems (eddill@ncsu.edu).
+GUI environment for simulating various aspects of the crystallization process. Initial project setup.  This software is not yet guaranteed to run flawlessly and critical errors may be experienced.  Please let me know if you run into problems (edill@bnl.gov).
 
 Development in progress, use at own risk! Contact: (Developer) Dr. Eric Dill edill@bnl.gov; (Principal Investigator) Professor James Martin martinjd@ncsu.edu
 
