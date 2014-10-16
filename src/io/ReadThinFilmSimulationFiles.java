@@ -29,8 +29,8 @@ import java.util.concurrent.Executors;
 import analysis.Analysis;
 import simulation.Crystal;
 import simulation.SimulSetupParams;
-import simulation.s.DimensionalityOptions;
-import simulation.s.FittableParametersOptions;
+import simulation.DimensionalityOptions;
+import simulation.FittableParametersOptions;
 import simulation.Simulation;
 
 public class ReadThinFilmSimulationFiles implements Runnable {

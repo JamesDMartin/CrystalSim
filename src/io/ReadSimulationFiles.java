@@ -35,7 +35,7 @@ import analysis.Analysis;
 
 
 import simulation.SimulSetupParams;
-import simulation.s.FittingType;
+import simulation.FittingType;
 import simulation.Simulation;
 
 public class ReadSimulationFiles implements Runnable {
@@ -376,7 +376,7 @@ public class ReadSimulationFiles implements Runnable {
 			e.printStackTrace();
 		}
 		PrintStream ps = new PrintStream(fos);
-		simul.getSample().printXYZ(ps, movie);
+		simul.getSample().printXYZ(ps, movie, 0);
 		ps.close();
 		try {
 			fos.close();
